@@ -20,16 +20,18 @@ using namespace std;
 //        //单元大小，这里是5*5的8位单元
 //        //腐蚀位置，为负值取核中心
 //        //腐蚀次数两次
-//        erode(src,dst,Mat(3,3,CV_8U),Point(0,0),1);
-//        cv::imshow("erode", dst) ;
-//
+//        erode(src,dst,Mat(3,3,CV_8U));
+//        
+//		Mat bound = src - dst;
+//		cv::imshow("Boundary", bound);
+//		cv::imshow("erode", dst) ;
 //        //输入图像
 //        //输出图像
 //        //单元大小，这里是5*5的8位单元
 //        //膨胀位置，为负值取核中心
 //        //膨胀次数两次
 //		
-//        dilate(src,dst,Mat(3,3,CV_8U),Point(0,0),1);
+//        dilate(src,dst,Mat(4,4,CV_8U),Point(-1,1),1);
 //        cv::imshow("dilate", dst) ;
 //
 //        //输入图像
@@ -38,10 +40,10 @@ using namespace std;
 //        //单元大小，这里是3*3的8位单元
 //        //开闭操作位置
 //        //开闭操作次数
-//        morphologyEx(src,dst,MORPH_OPEN,Mat(3,3,CV_8U),Point(0,0),1);
+//        morphologyEx(src,dst,MORPH_OPEN,Mat(4,4,CV_8U),Point(-1,1),1);
 //        cv::imshow("OPEN", dst) ;
 //
-//        morphologyEx(src,dst,MORPH_CLOSE,Mat(3,3,CV_8U),Point(0,0),1);
+//        morphologyEx(src,dst,MORPH_CLOSE,Mat(4,4,CV_8U),Point(-1,1),1);
 //        cv::imshow("CLOSE", dst) ;
 //
 //        //imshow("dst",dst);
@@ -271,8 +273,14 @@ int main(int argc, char* argv[])
 	Mat erodeImage;
 	erode(binImage, erodeImage, Mat(3,3,CV_8U), Point(0,0), 1);
 	erodeImage.convertTo(erodeImage, CV_8UC1) ;
+	Mat boundaryImage;
+	boundaryImage = binImage - erodeImage;
 	threshold(erodeImage, erodeImage, 0, 255, CV_THRESH_BINARY_INV);
+	threshold(boundaryImage, boundaryImage, 0, 255, CV_THRESH_BINARY_INV);
 	imshow("erodeImage", erodeImage);
+
+	
+	imshow("boundaryImage", boundaryImage);
 
 	Mat openImage;
 	opening(binImage, openImage, Mat(3,3,CV_8U), Point(0,0), 1);
